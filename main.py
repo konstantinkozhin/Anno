@@ -417,11 +417,6 @@ def decrease_contrast():
         contrast_index -= 1
     refresh_display()
 
-#def toggle_quality(event=None):
-#    global low_quality
-#    low_quality = not low_quality
-#    refresh_display()
-
 root = ThemedTk(theme="breeze")
 root.title("Anno: Программа для аннотирования изображений")
 root.state('normal')
@@ -432,7 +427,7 @@ icon_data = base64.b64decode(icon_base64)
 icon_image = tk.PhotoImage(data=icon_data)
 root.iconphoto(True, icon_image)
 
-# Установить современный стиль
+# Установить стиль
 style = {"padx": 10, "pady": 10}
 frame = ttk.Frame(root, padding=20)
 frame.pack(fill=tk.BOTH, expand=True)
@@ -440,8 +435,6 @@ frame.pack(fill=tk.BOTH, expand=True)
 top_frame = ttk.Frame(frame)
 top_frame.pack(fill=tk.X, **style)
 
-#directory_label = ttk.Label(top_frame, text="Папка с изображениями:")
-#directory_label.pack(side=tk.LEFT)
 directory_button = ttk.Button(top_frame, text="Выбрать папку", command=load_dataset)
 directory_button.pack(side=tk.LEFT, padx=5)
 
@@ -505,7 +498,6 @@ root.bind("<Right>", next_image)
 root.bind("=", lambda e: increase_contrast())
 root.bind("+", lambda e: increase_contrast())
 root.bind("-", lambda e: decrease_contrast())
-#root.bind("<Alt_L>", toggle_quality)
 
 root.bind("<MouseWheel>", lambda event: next_image() if event.delta < 0 else previous_image())
 
