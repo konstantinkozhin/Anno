@@ -208,8 +208,6 @@ def refresh_display():
         show_image()
         update_image_info()
 
-
-
 def show_class_info():
     global classes, class_colors, class_info_window
     if class_info_window is not None and class_info_window.winfo_exists():
@@ -267,12 +265,6 @@ def show_class_info():
     apply_theme_to_window(class_info_window)
 
     class_info_window.mainloop()
-    
-
-
-
-
-
 
 def clear_annotations():
     global current_annotations, label_dir, index, dataset
@@ -311,7 +303,6 @@ def on_mouse_down(event):
         start_x = min(max(event.x, 0), new_width)
         start_y = min(max(event.y, 0), new_height)
         current_shape = annotation_canvas.create_rectangle(start_x, start_y, start_x, start_y, outline=class_colors.get(current_class_id, 'red'))
-
 
 def on_mouse_up(event):
     global start_x, start_y, current_shape, shapes
@@ -374,15 +365,12 @@ def select_box(x, y):
             return
     refresh_canvas()
 
-
 def on_delete(event):
     global selected_boxes, shapes
     shapes = [shape for i, shape in enumerate(shapes) if i not in selected_boxes]
     selected_boxes.clear()
     save_annotations()
     refresh_canvas()
-
-
 
 def change_class(event=None):
     global class_selection_window
@@ -429,25 +417,49 @@ def change_class(event=None):
     # Установка темы для окна class_selection_window
     apply_theme_to_window(class_selection_window)
 
+def show_help():
+    help_window = tk.Toplevel(root)
+    help_window.title("Горячие клавиши")
+    help_window.geometry("310x220")
+    help_window.resizable(False, False)  # Запрещаем изменение размеров окна
+    help_window.attributes('-topmost', True)  # Always on top
+    help_window.focus_force()  # Bring to front and make active
 
+    # Установка темы для окна help_window
+    apply_theme_to_window(help_window)
 
-def show_other_popup():
-    other_popup_window = tk.Toplevel(root)
-    other_popup_window.title("Other Settings")
-    other_popup_window.attributes('-topmost', True)  # Always on top
-    other_popup_window.focus_force()  # Bring to front and make active
+    frame = ttk.Frame(help_window, padding="10")
+    frame.pack(fill=tk.BOTH, expand=True)
+
+    # Создаем дерево для отображения горячих клавиш
+    tree = ttk.Treeview(frame, columns=("Action", "Key"), show='headings', height=8)
+    tree.heading("Action", text="Действие")
+    tree.heading("Key", text="Клавиша")
+    tree.column("Action", anchor=tk.W, width=200)
+    tree.column("Key", anchor=tk.CENTER, width=80)
+
+    key_bindings = [
+        ("Следующее изображение", "Right Arrow"),
+        ("Предыдущее изображение", "Left Arrow"),
+        ("Увеличить контрастность", "+"),
+        ("Уменьшить контрастность", "-"),
+        ("Выбрать класс", "Tab"),
+        ("Удалить выделенные боксы", "Backspace"),
+        ("Обновить отображение", "R"),
+        ("Сменить тему", "T")
+    ]
+
+    for action, key in key_bindings:
+        tree.insert("", "end", values=(action, key))
+
+    tree.pack(fill=tk.BOTH, expand=True)
 
     def close_window(event=None):
-        other_popup_window.destroy()
+        help_window.destroy()
 
-    other_popup_window.bind("<Escape>", close_window)  # Bind Esc to close
+    help_window.bind("<Escape>", close_window)  # Bind Esc to close
 
-    # Add other content and widgets to this window here
-
-    other_popup_window.mainloop()
-
-
-
+    help_window.mainloop()
 
 def refresh_canvas():
     annotation_canvas.delete("all")
@@ -458,7 +470,6 @@ def refresh_canvas():
         if int(shape[4]) < len(classes):
             annotation_canvas.create_text(shape[0], shape[1], anchor=tk.NW, text=f"{int(shape[4])}: {classes[int(shape[4])]}", fill=class_colors.get(int(shape[4]), 'red'))
 
-    
 def show_class_label():
     class_label = tk.Label(root, text=f"Текущий класс: {current_class_id}: {classes[current_class_id]}", bg="yellow")
     class_label.place(relx=0.5, rely=0, anchor='n')
@@ -564,31 +575,37 @@ style = ttk.Style()
 frame = ttk.Frame(root, padding=20)
 frame.pack(fill=tk.BOTH, expand=True)
 
+# Создаем верхнее меню
+menubar = tk.Menu(root)
+root.config(menu=menubar)
+
+file_menu = tk.Menu(menubar, tearoff=0)
+file_menu.add_command(label="Выбрать папку", command=load_dataset)
+file_menu.add_command(label="Выбрать файл классов", command=load_class_file)
+menubar.add_cascade(label="Файл", menu=file_menu)
+
+view_menu = tk.Menu(menubar, tearoff=0)
+view_menu.add_command(label="Сменить тему", command=toggle_theme)
+view_menu.add_command(label="Обновить", command=refresh_display)
+menubar.add_cascade(label="Вид", menu=view_menu)
+
+additional_menu = tk.Menu(menubar, tearoff=0)
+additional_menu.add_command(label="Список классов", command=show_class_info)
+additional_menu.add_command(label="Очистить", command=clear_annotations)
+menubar.add_cascade(label="Дополнительно", menu=additional_menu)
+
+help_menu = tk.Menu(menubar, tearoff=0)
+help_menu.add_command(label="Горячие клавиши", command=show_help)
+menubar.add_cascade(label="Помощь", menu=help_menu)
+
 top_frame = ttk.Frame(frame)
 top_frame.pack(fill=tk.X, **style_options)
 
-directory_button = ttk.Button(top_frame, text="Выбрать папку", command=load_dataset)
-directory_button.pack(side=tk.LEFT, padx=5)
+#show_class_info_button = ttk.Button(top_frame, text="Список классов", command=show_class_info)
+#show_class_info_button.pack(side=tk.LEFT, padx=5)
 
-class_label = ttk.Label(top_frame, text="  Настройки классов:")
-class_label.pack(side=tk.LEFT, padx=5)
-class_button = ttk.Button(top_frame, text="Загрузить файл классов", command=load_class_file)
-class_button.pack(side=tk.LEFT, padx=5)
-
-show_class_info_button = ttk.Button(top_frame, text="Показать классы", command=show_class_info)
-show_class_info_button.pack(side=tk.LEFT, padx=5)
-
-annot_label = ttk.Label(top_frame, text="  Настройки аннотирования:")
-annot_label.pack(side=tk.LEFT, padx=5)
-
-refresh_button = ttk.Button(top_frame, text="Обновить", command=refresh_display)
-refresh_button.pack(side=tk.LEFT, padx=5)
-
-clear_button = ttk.Button(top_frame, text="Очистить", command=clear_annotations)
-clear_button.pack(side=tk.LEFT, padx=5)
-
-theme_button = ttk.Button(top_frame, text="Переключить тему", command=toggle_theme)
-theme_button.pack(side=tk.LEFT, padx=5)
+#clear_button = ttk.Button(top_frame, text="Очистить", command=clear_annotations)
+#clear_button.pack(side=tk.LEFT, padx=5)
 
 # Добавить счетчик изображений и поле ввода номера изображения
 counter_frame = ttk.Frame(top_frame)
@@ -605,10 +622,7 @@ image_number_entry.bind("<Return>", jump_to_image)
 jump_button = ttk.Button(counter_frame, text="Перейти", command=jump_to_image)
 jump_button.pack(side=tk.LEFT, padx=5)
 
-info_frame = ttk.Frame(frame)
-info_frame.pack(fill=tk.X, **style_options)
-
-image_info_label = ttk.Label(info_frame, text="Позиция: 0/0, Текущее изображение: N/A")
+image_info_label = ttk.Label(counter_frame, text="Позиция: 0/0, Текущее изображение: N/A")
 image_info_label.pack(side=tk.LEFT, padx=5)
 
 main_frame = ttk.Frame(frame)
@@ -649,7 +663,7 @@ def _onKeyRelease(event):
         increase_contrast()
     if event.keycode in [45, 189, 173]:  # Minus key (-) in different layouts
         decrease_contrast()
-    if event.keycode == 16:  # Tab key
+    if event.keycode == 9:  # Tab key
         change_class(event)
     if event.keycode == 8:  # Backspace key
         on_delete(event)
@@ -659,10 +673,6 @@ def _onKeyRelease(event):
 # Bind all key press events to the _onKeyRelease function
 root.bind_all("<KeyRelease>", _onKeyRelease, "+")
 
-
-
 root.bind("<MouseWheel>", lambda event: next_image() if event.delta < 0 else previous_image())
-
-
 
 root.mainloop()
