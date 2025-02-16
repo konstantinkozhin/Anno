@@ -75,4 +75,4 @@
 
 Вы можете скачать программу "Anno OCR" по следующей ссылке на Яндекс Диск:
 
-[Скачать Anno PE](https://disk.yandex.ru/d/3Xjn2hIDP62xpg)
+[Скачать Anno OCR](https://disk.yandex.ru/d/3Xjn2hIDP62xpg)
