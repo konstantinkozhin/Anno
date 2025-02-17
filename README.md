@@ -75,4 +75,4 @@
 
 Вы можете скачать программу "Anno OCR" по следующей ссылке:
 
-[Скачать Anno OCR]([https://disk.yandex.ru/d/3Xjn2hIDP62xpg](https://drive.google.com/drive/folders/1K4D0LPNx1idc5h0YMJ1rPYqewmyKZC39?usp=sharing))
+[Скачать Anno OCR]([https://drive.google.com/drive/folders/1K4D0LPNx1idc5h0YMJ1rPYqewmyKZC39?usp=drive_link])
