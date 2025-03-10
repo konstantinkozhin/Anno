@@ -78,6 +78,6 @@ https://github.com/user-attachments/assets/f53cf13e-c37e-4e42-9d15-2f5c82b385e7
 
 ## Скачать
 
-Вы можете скачать программу "Anno OCR" по следующей ссылке:
+Вы можете скачать программу "Anno OCR" и "Anno MCL" по следующей ссылке:
 
-[Скачать Anno OCR](https://drive.google.com/drive/folders/1K4D0LPNx1idc5h0YMJ1rPYqewmyKZC39?usp=drive_link)
+[Скачать](https://drive.google.com/drive/folders/1K4D0LPNx1idc5h0YMJ1rPYqewmyKZC39?usp=drive_link)
